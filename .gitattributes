@@ -1,0 +1,4 @@
+# Container entrypoints and build inputs: CRLF breaks shebangs and parser directives.
+*.sh text eol=lf
+supervisord.conf text eol=lf
+Dockerfile text eol=lf

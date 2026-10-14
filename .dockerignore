@@ -1,0 +1,14 @@
+**
+
+!Dockerfile
+!entrypoint.sh
+!supervisord.conf
+!.pi/
+!.pi/SYSTEM.md
+!.pi/skills/
+!.pi/skills/**
+
+**/.DS_Store
+**/Thumbs.db
+**/*.log
+**/*.tmp

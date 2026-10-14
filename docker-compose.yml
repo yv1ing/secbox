@@ -1,0 +1,12 @@
+services:
+  secbox:
+    build: .
+    image: secbox:latest
+    container_name: secbox
+    network_mode: host
+    restart: always
+    cap_add:
+      - SYS_PTRACE
+    environment:
+      PI_WEB_PASSWORD:
+      PI_WEB_ALLOWED_HOSTS:
