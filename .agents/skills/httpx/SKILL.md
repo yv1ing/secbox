@@ -23,8 +23,8 @@ httpx -h
 - Prefer JSON output when results will be parsed with `jq` or consumed by another tool.
 - Use silent/no-color output modes when piping to avoid mixing progress text with data.
 - Save large outputs to files rather than streaming them into the conversation.
-- Treat detected technologies, titles, redirects, and TLS observations as triage signals; validate important claims with response evidence, browser inspection, or targeted follow-up.
-- Keep concurrency and request rates low by default. Do not use update, cloud/dashboard upload, screenshot, headless browser, or high-concurrency modes unless the task requires it.
+- Treat detected technologies, titles, redirects, and TLS observations as triage signals; validate important claims with response evidence or targeted follow-up.
+- Keep concurrency and request rates low by default. Do not use update, cloud/dashboard upload, screenshot, or high-concurrency modes unless the task requires it.
 
 ## Common workflows
 
@@ -34,7 +34,7 @@ Probe a small, reviewed host list and keep structured evidence:
 httpx -l hosts.txt -silent -threads 5 -rate-limit 10 -status-code -title -tech-detect -follow-redirects -json -o httpx.jsonl
 ```
 
-Probe a single URL before browser review:
+Probe a single URL before deeper manual review:
 
 ```sh
 printf '%s\n' 'https://example.com' | httpx -silent -threads 1 -rate-limit 2 -status-code -title -tech-detect
