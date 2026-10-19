@@ -12,19 +12,18 @@ Use Ghidra's `analyzeHeadless` tool through the bundled wrapper for automated re
 Before constructing commands, run the wrapper help for its options and list the bundled export scripts:
 
 ```bash
-/root/.agents/skills/ghidra/scripts/ghidra-analyze.sh --help
-ls /root/.agents/skills/ghidra/scripts/ghidra_scripts/
+./scripts/ghidra-analyze.sh --help
+ls ./scripts/ghidra_scripts/
 ```
 
 The scripts directory is the authoritative inventory of built-in exports; `ExportAll.java` is the recommended first-pass export.
 
 ## Resource paths
 
-The skill directory in the secbox image is `/root/.agents/skills/ghidra`. Commands below use its absolute path so they work from any working directory. If the skill is mounted elsewhere, replace that prefix with the actual skill directory.
+Commands below use its absolute path so they work from any working directory. If the skill is mounted elsewhere, replace that prefix with the actual skill directory.
 
-- Skill directory: `/root/.agents/skills/ghidra`
-- Wrapper script: `/root/.agents/skills/ghidra/scripts/ghidra-analyze.sh`
-- Built-in export scripts: `/root/.agents/skills/ghidra/scripts/ghidra_scripts`
+- Wrapper script: `./scripts/ghidra-analyze.sh`
+- Built-in export scripts: `./scripts/ghidra_scripts`
 - Headless analyzer: `/usr/local/bin/analyzeHeadless`
 
 ## Image environment
@@ -39,20 +38,20 @@ The skill directory in the secbox image is `/root/.agents/skills/ghidra`. Comman
 
 | Task | Command |
 |------|---------|
-| First-pass analysis and exports | `/root/.agents/skills/ghidra/scripts/ghidra-analyze.sh -s ExportAll.java -o ./output binary` |
-| Decompile to C code | `/root/.agents/skills/ghidra/scripts/ghidra-analyze.sh -s ExportDecompiled.java -o ./output binary` |
-| List functions | `/root/.agents/skills/ghidra/scripts/ghidra-analyze.sh -s ExportFunctions.java -o ./output binary` |
-| Extract strings | `/root/.agents/skills/ghidra/scripts/ghidra-analyze.sh -s ExportStrings.java -o ./output binary` |
-| Get call graph | `/root/.agents/skills/ghidra/scripts/ghidra-analyze.sh -s ExportCalls.java -o ./output binary` |
-| Export symbols | `/root/.agents/skills/ghidra/scripts/ghidra-analyze.sh -s ExportSymbols.java -o ./output binary` |
+| First-pass analysis and exports | `./scripts/ghidra-analyze.sh -s ExportAll.java -o ./output binary` |
+| Decompile to C code | `./scripts/ghidra-analyze.sh -s ExportDecompiled.java -o ./output binary` |
+| List functions | `./scripts/ghidra-analyze.sh -s ExportFunctions.java -o ./output binary` |
+| Extract strings | `./scripts/ghidra-analyze.sh -s ExportStrings.java -o ./output binary` |
+| Get call graph | `./scripts/ghidra-analyze.sh -s ExportCalls.java -o ./output binary` |
+| Export symbols | `./scripts/ghidra-analyze.sh -s ExportSymbols.java -o ./output binary` |
 
 ## Usage rules
 
 ```bash
-/root/.agents/skills/ghidra/scripts/ghidra-analyze.sh [options] <binary>
+./scripts/ghidra-analyze.sh [options] <binary>
 ```
 
-Always call the wrapper with its `/root/.agents/skills/ghidra/...` path. It handles project creation/cleanup and provides a simpler interface to `analyzeHeadless`.
+Always call the wrapper with its `./...` path. It handles project creation/cleanup and provides a simpler interface to `analyzeHeadless`.
 
 - Work only on provided binaries or explicitly authorized artifacts.
 - Prefer `ExportAll.java` for first-pass analysis unless the task needs a narrower export.
@@ -90,7 +89,7 @@ First-pass export — decompiles all functions and writes a summary, decompiled 
 - `{name}_interesting.txt` - Functions matching security-relevant patterns
 
 ```bash
-/root/.agents/skills/ghidra/scripts/ghidra-analyze.sh -s ExportAll.java -o ./analysis firmware.bin
+./scripts/ghidra-analyze.sh -s ExportAll.java -o ./analysis firmware.bin
 ```
 
 ### ExportDecompiled.java
@@ -99,7 +98,7 @@ Decompile all functions to C pseudocode.
 **Output:** `{name}_decompiled.c`
 
 ```bash
-/root/.agents/skills/ghidra/scripts/ghidra-analyze.sh -s ExportDecompiled.java -o ./output program.exe
+./scripts/ghidra-analyze.sh -s ExportDecompiled.java -o ./output program.exe
 ```
 
 ### ExportFunctions.java
@@ -134,7 +133,7 @@ Extract all strings (ASCII, Unicode) with addresses.
 **Output:** `{name}_strings.json`
 
 ```bash
-/root/.agents/skills/ghidra/scripts/ghidra-analyze.sh -s ExportStrings.java -o ./output malware.exe
+./scripts/ghidra-analyze.sh -s ExportStrings.java -o ./output malware.exe
 ```
 
 ### ExportCalls.java
@@ -161,7 +160,7 @@ Export all symbols: imports, exports, and internal symbols.
 mkdir -p ./analysis
 
 # Run comprehensive analysis
-/root/.agents/skills/ghidra/scripts/ghidra-analyze.sh -s ExportAll.java -o ./analysis unknown_binary
+./scripts/ghidra-analyze.sh -s ExportAll.java -o ./analysis unknown_binary
 
 # Review the summary first with bounded reads
 sed -n '1,160p' ./analysis/unknown_binary_summary.txt
@@ -177,7 +176,7 @@ grep -A 50 "encrypt" ./analysis/unknown_binary_decompiled.c
 
 ```bash
 # Specify ARM architecture for firmware
-/root/.agents/skills/ghidra/scripts/ghidra-analyze.sh \
+./scripts/ghidra-analyze.sh \
     -p "ARM:LE:32:v7" \
     -s ExportAll.java \
     -o ./firmware_analysis \
@@ -188,7 +187,7 @@ grep -A 50 "encrypt" ./analysis/unknown_binary_decompiled.c
 
 ```bash
 # Just get function names and addresses (faster)
-/root/.agents/skills/ghidra/scripts/ghidra-analyze.sh --no-analysis -s ExportFunctions.java -o . program
+./scripts/ghidra-analyze.sh --no-analysis -s ExportFunctions.java -o . program
 
 # Parse with jq
 jq '.functions[] | "\(.address): \(.name)"' program_functions.json
@@ -207,7 +206,7 @@ grep -n "strcpy\|sprintf\|gets" output_decompiled.c
 ```bash
 for bin in ./samples/*; do
     name=$(basename "$bin")
-    /root/.agents/skills/ghidra/scripts/ghidra-analyze.sh -s ExportAll.java -o "./results/$name" "$bin"
+    ./scripts/ghidra-analyze.sh -s ExportAll.java -o "./results/$name" "$bin"
 done
 ```
 
@@ -243,10 +242,10 @@ export GHIDRA_HOME=/path/to/ghidra_PUBLIC
 ### Analysis takes too long
 ```bash
 # Set a timeout (seconds)
-/root/.agents/skills/ghidra/scripts/ghidra-analyze.sh --timeout 300 -s ExportAll.java binary
+./scripts/ghidra-analyze.sh --timeout 300 -s ExportAll.java binary
 
 # Skip analysis for quick export
-/root/.agents/skills/ghidra/scripts/ghidra-analyze.sh --no-analysis -s ExportSymbols.java binary
+./scripts/ghidra-analyze.sh --no-analysis -s ExportSymbols.java binary
 ```
 
 ### Out of memory
@@ -260,7 +259,7 @@ export GHIDRA_MAXMEM=4G
 ### Wrong architecture detected
 Explicitly specify the processor:
 ```bash
-/root/.agents/skills/ghidra/scripts/ghidra-analyze.sh -p "ARM:LE:32:v7" -s ExportAll.java firmware.bin
+./scripts/ghidra-analyze.sh -p "ARM:LE:32:v7" -s ExportAll.java firmware.bin
 ```
 
 ## Tips

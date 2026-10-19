@@ -149,6 +149,7 @@ RUN set -eux; \
       wget \
       whois \
       xz-utils \
+      zip \
       zstd; \
     find /usr/lib/jvm -type f -name 'src.zip' -delete; \
     find /usr/lib/jvm -type d -name 'jmods' -prune -exec rm -rf '{}' +; \
@@ -247,6 +248,7 @@ RUN set -eux; \
     whois --version; \
     command -v xz; \
     command -v zstd; \
+    zip -v >/dev/null; \
     test -x /opt/ghidra/support/analyzeHeadless; \
     test -x /opt/jadx/bin/jadx; \
     test -x /root/.agents/skills/ghidra/scripts/ghidra-analyze.sh; \
